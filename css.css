@@ -1,0 +1,108 @@
+body{ 
+			background: lightblue;
+		}
+		#jogo{
+			background: black;
+			width: 610px;
+			height: 610px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		.forma{
+			background: white;
+			width: 200px;
+			height: 200px;
+		}
+		#objeto1{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		#objeto2{
+			position: absolute;
+			top: 50%;
+			left: 83.76%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		#objeto3{
+			position: absolute;
+			top: 50%;
+			left: 117.5%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		#objeto4{
+			position: absolute;
+			top: 83.76%;
+			left: 50%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		#objeto5{
+			position: absolute;
+			top: 83.76%;
+			left: 83.76%;
+			margin-top: -305px;
+			margin-left: -305px;
+
+		}
+		#objeto6{
+			position: absolute;
+			top: 83.76%;
+			left: 117.5%;
+			margin-top: -305px;
+			margin-left: -305px;
+
+		}
+		#objeto7{
+			position: absolute;
+			top: 117.5%;
+			left: 50%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		#objeto8{
+			position: absolute;
+			top: 117.5%;
+			left: 83.76%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		#objeto9{
+			position: absolute;
+			top: 117.5%;
+			left: 117.5%;
+			margin-top: -305px;
+			margin-left: -305px;
+		}
+		.edit{
+			font-size: 150px;
+			margin: 0px;
+			margin-left: 13%;
+			font-family: Comic Sans MS;
+		}
+
+		.score{
+			width: 200px;
+			height: 60px;
+			background: white;
+			border-radius: 13px;
+			border: black solid 3px;
+		}
+		.score p{
+			font-size: 25px;
+			text-align: center;
+			margin: 0px;
+			margin-top: 10px;
+		}
+		#player2{
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+		<meta charset="utf-8">
+		<title>Snake</title>
+		<style>
+			canvas{
+				background: darkslategrey;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -300px;
+				margin-top: -300px;
+			}
+			#placar{
+				width: 600px;
+				height: 45px;
+				position: absolute;
+				left: 50%;
+				margin-left: -300px;
+				top: 50px; 
+				border: black solid 3px;
+				border-radius: 13px;
+
+			}
+			#pon{
+				font-style: italic;
+				font-family: helvetica;
+				text-align:  center;
+				font-size: 20px;
+				font-style: bold;
+				padding-bottom: 10px;				
+			}
+		</style>
+</head>
+<body>
+	<div id="placar">
+		<p id="pon"></p>
+	</div>
+	<script>
+		var canvas, ctxt, HEIGHT= 600 ,WIDTH = 600 , tileSize = 600/30 , direction=[[0,0]] , dinter = [[0,0]], FPS = 10, xyl = [[20,15]];
+		var num2;
+		var snake =[[20,20],[20,21],[20,22]], pontos = 0, invencible = 0;;
+		var redp = {
+			turn: 0 ,
+			x: 0,
+			y: 0
+		}
+		var wall = {
+			drawl: function(cell){
+				ctxt.fillStyle= 'grey';
+				ctxt.fillRect(xyl[cell][0]* tileSize, xyl[cell][1]* tileSize, tileSize,tileSize);
+				ctxt.fillRect((xyl[cell][0]-1)*tileSize, xyl[cell][1]*tileSize, tileSize, tileSize);
+				ctxt.fillRect((xyl[cell][0]+1)*tileSize, xyl[cell][1]*tileSize, tileSize, tileSize);
+				ctxt.fillRect((xyl[cell][0]+1)*tileSize, (xyl[cell][1]+1)*tileSize, tileSize, tileSize);
+			},
+			testl: function(pos){
+				var coli = 0;
+				if (snake[0][0] == pos[0] && snake[0][1] == pos[1])
+					coli = 1;
+				else if(snake[0][0] == pos[0]-1 && snake[0][1] == pos[1])
+					coli = 1;
+				else if(snake[0][0] == pos[0]+1 && snake[0][1] == pos[1])
+					coli = 1;
+				else if(snake[0][0] == pos[0]+1 && snake[0][1] == pos[1]+1)
+					coli = 1;
+
+				return coli;
+			}
+			
+		};
+
+		function init(){
+			canvas = document.createElement('canvas');
+			canvas.height = HEIGHT;
+			canvas.width = WIDTH;
+
+			document.body.appendChild(canvas);
+
+			ctxt = canvas.getContext('2d');
+			frames();
+			
+		}
+
+		function newgame(){
+			alert('Você perdeu!');
+			window.location.reload();
+		}
+
+		document.addEventListener('keydown', function(e){
+			if( e.keyCode == 38){
+				direction = [[0,-1]];
+			}
+			else if(e.keyCode == 40){
+				direction = [[0, 1]];
+			}
+			else if(e.keyCode == 37){
+				direction = [[-1,0]];
+			}
+			else if(e.keyCode == 39){
+				direction = [[1,0]];
+			}
+		});
+
+		function walk(){
+			ctxt.fillStyle= 'lime';
+
+			for (var i = 0; i < snake.length; i++) {
+				if(snake[i][0] < 0){
+					snake[i][0] = 29;
+					direction = [[-1,0]];
+				}
+				else if ( snake[i][1] < 0){
+					snake[i][1] = 29;
+					direction = [[0,-1]];
+				}
+				if (snake[i][0] > 29){
+					snake[i][0] = 0;
+					direction = [[1,0]];
+				}
+				 
+				else if( snake[i][1] > 29){
+					snake[i][1] = 0;
+					direction = [[0,1]];
+				}
+			};
+
+			dinter[0][0] = snake[0][0];
+			dinter[0][1] = snake[0][1];
+
+			snake[0][0] += direction[0][0];
+			snake[0][1] += direction[0][1];
+
+
+			for(var i = snake.length -1 ; i > 1 ; i--){
+				snake[i][0]= snake[i-1][0];
+				snake[i][1]= snake[i-1][1];
+			}
+
+			snake[1][0] = dinter[0][0];
+			snake[1][1] = dinter[0][1];
+
+			for(var i = 0; i < snake.length; i++){
+				ctxt.fillRect(snake[i][0]* tileSize, snake[i][1]* tileSize, tileSize, tileSize);
+			}
+		}
+
+		function run(){
+			draw();
+			addtail();
+			tail();
+			fail();
+			addbrick();
+			walk();
+		}
+// função que adiciona os pontos vermelhos no mapa.
+		function addtail(){
+			if(redp.turn == 0){
+				var or = Math.floor(Math.random() * 10);
+				if(or < 3){
+					do{
+						redp.x = Math.floor(Math.random() * 50);
+						redp.y = Math.floor(Math.random() * 50);
+					}while(redp.x > 29 || redp.x < 0 || redp.y > 29 || redp.y < 0);	
+				}else{
+					redp.x = Math.floor(Math.random() * 10);
+					redp.y = Math.floor(Math.random() * 10);
+				}
+				
+
+				redp.turn = 1;
+			}
+			if (snake[0][0] == redp.x && snake[0][1] == redp.y){
+				redp.turn = 0;
+				snake.push([0,0]);
+				pontos +=1;
+			}
+
+			ctxt.fillStyle = 'red';
+			ctxt.fillRect(redp.x* tileSize, redp.y* tileSize, tileSize, tileSize);
+		}
+
+		function tail(){
+			tailx = 15;
+			taily = 15;
+
+			if (snake[0][0] == tailx && snake[0][1] == taily){
+				snake.push([0,0]);
+			}
+		}
+
+		function addbrick(){
+			var num1;
+			var xy = [0,0];
+
+			if (pontos%3 != 0){
+				num2 = 0;
+			}
+
+			if(pontos%3 == 0 && pontos != 0 && num2 == 0){
+				num1 = Math.floor( Math.random()* 10);
+				if (num1 < 3){
+					do{
+						xy[0] = Math.floor(Math.random()* 50);
+						xy[1] = Math.floor(Math.random()* 50);
+					}while(xy[0] < 0 && xy[0] > 29 && xy[1] < 0 && xy[1] > 29);
+				}else{
+					do{
+						xy[0] = Math.floor(Math.random()* 10);
+						xy[1] = Math.floor(Math.random()* 10);
+					}while(xy[0] < 0 && xy[0] > 29 && xy[1] < 0 && xy[1] > 29);
+				}
+
+				xyl.push(xy);
+				console.log(xyl);
+
+				num2 =1;
+			}
+
+			// função que faz desenhar as paredes.
+			for (var i = 0; i < xyl.length; i++){
+				wall.drawl(i);
+			}
+		}
+
+		function fail(){
+			var colisao;
+
+			for (var i =0; i < xyl.length; i++ ){
+				colisao = wall.testl(xyl[i]);
+
+				if (colisao == 1 && pontos == 0 && invencible == 0) {
+					newgame();
+				};
+
+				if (colisao == 1){
+					snake.splice(3);
+					pontos = 0 ;
+					invencible = 7;
+				}
+			}
+			if(invencible > 0){
+				invencible -=1;
+			}
+		}
+
+
+		function draw(){
+			ctxt.clearRect(0, 0, canvas.height , canvas.width );
+			document.getElementById('pon').innerHTML = 'Pontos: '+ pontos;
+		}
+
+		function frames(){
+			setInterval(run , 1000 / FPS);
+		}
+		init();
+	
+
+	</script>
+</body>
+</html>

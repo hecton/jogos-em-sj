@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>pong</title>
+	<style>
+		canvas{
+			background: darkslategrey;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -300px;
+			margin-left: -300px;
+		}
+	</style>
+</head>
+<body>
+	<ul>
+		<li>jogador 1<br>cima = w <br> baixo = s</li><br>
+		<li>jogador 2<br>cima = seta cima <br> baixo = seta baixo</li><br>
+		<li>Reiniciar = Esc</li>
+	</ul>
+	<canvas width="600" height="600" id="canv"></canvas>
+</body>
+	<script>
+		var canvas = document.getElementById('canv');
+		var ctxt = canvas.getContext('2d');
+
+		var leftp = {
+			altura: 180,
+			largura : 30,
+			x: 5,
+			y: canvas.height / 2 -90,
+			velocidade: 30,
+			pontos: 0
+		}
+
+		var rightp = {
+			altura: 180,
+			largura : 30,
+			x: 565,
+			y: canvas.height / 2 -90,
+			velocidade: 30,
+			pontos: 0
+		}
+
+		var bola = {
+			altura: 30,
+			largura: 30,
+			x: canvas.height / 2 -15,
+			y: canvas.width / 2 -15,
+			movx: -1,
+			movy: -1,
+			mod: 2,
+			velocidade: 50
+		}
+
+		var teclas = false;
+
+		document.addEventListener('keydown', function(e){
+			if( e.keyCode == 38 && rightp.y > 0)
+				rightp.y -= rightp.velocidade;
+			if( e.keyCode == 40 && rightp.y < canvas.width - 170)
+				rightp.y += rightp.velocidade;
+			if( e.keyCode == 87 && leftp.y > 0)
+				leftp.y -= leftp.velocidade;
+			if( e.keyCode == 83 && leftp.y < canvas.width - 170)
+				leftp.y += leftp.velocidade;
+			if( e.keyCode == 27)
+				window.location.reload();
+		});
+		document.addEventListener('keyup', function(e){
+			delete teclas[e.keyCode];
+		});
+
+// função que faz a bola mexer 
+		function mover(){
+			if(bola.x <= 33 && bola.y > leftp.y - 20  && bola.y < leftp.y + leftp.altura){
+				bola.movx= 1;
+				bola.mod += 0.2;
+			}
+			else if(bola.x >= canvas.height - 55 && bola.y > rightp.y - 20 && bola.y < rightp.y + rightp.altura){
+				bola.movx = -1;
+				bola.mod += 0.2;
+			}
+				
+			if(bola.y <= 0)
+				bola.movy = 1;
+			else if (bola.y >= canvas.height -( bola.altura / 2))
+				bola.movy = -1;
+			
+			if( bola.x < 0){
+				rightp.pontos+= 1;
+				resetp();
+			}
+			else if ( bola.x > canvas.width){
+				leftp.pontos+= 1;
+				resetp();
+			}
+				
+
+			bola.x += bola.movx * bola.mod;
+			bola.y += bola.movy * bola.mod;
+		}
+// posição inicial
+		function resetp(){
+			bola.y = (canvas.height / 2) - bola.altura / 2;
+			bola.x = (canvas.width / 2) - bola.largura /2 ;
+			bola.mod = 2;
+		}
+// função que desenha os objetos
+		function desenhar(){
+			ctxt.clearRect(0 , 0 , canvas.height , canvas.width);
+
+			mover();
+			ctxt.fillStyle = 'white';
+			ctxt.fillRect( bola.x , bola.y ,bola.altura , bola.largura );
+			ctxt.fillRect( leftp.x , leftp.y , leftp.largura , leftp.altura);
+			ctxt.fillRect( rightp.x , rightp.y , rightp.largura , rightp.altura);
+
+			ctxt.font = '20px arial';
+			ctxt.fillText('1° Jogador: '+ leftp.pontos, 20 , 20);
+			ctxt.fillText('2° Jogador: '+ rightp.pontos, 460, 20);
+		}
+		setInterval(desenhar , 10);
+	</script>
+</html>
